@@ -408,25 +408,6 @@
         <button class="btn btn-primary" onclick="App.loadOrder()">Load</button>
       </div>
 
-      <details id="config-details" style="width:100%;max-width:480px;">
-        <summary style="cursor:pointer;color:var(--text-dim);font-size:13px;padding:4px 0;list-style:none;">
-          ⚙ API Configuration
-        </summary>
-        <div id="config-panel" style="margin-top:12px;">
-          <h3>ApparelMagic API</h3>
-          <div class="field">
-            <label>Subdomain</label>
-            <input type="text" id="cfg-subdomain" placeholder="yourcompany"
-                   autocomplete="off" autocorrect="off" spellcheck="false">
-          </div>
-          <div class="field">
-            <label>API Token</label>
-            <input type="text" id="cfg-token" placeholder="your_api_token"
-                   autocomplete="off" autocorrect="off" spellcheck="false">
-          </div>
-          <button class="btn btn-ghost btn-sm" onclick="App.saveConfig()">Save</button>
-        </div>
-      </details>
     </div>
 
     <!-- LOADING -->
@@ -513,18 +494,9 @@
 'use strict';
 
 // ── Config ────────────────────────────────────────────────────────────────────
-const DEFAULTS = {
-  subdomain: 'kohindustries',
-  token:     '1e10c8f6d6bfbbddc025e880f8b08197',
-};
-
 const Config = {
-  get subdomain() { return localStorage.getItem('am_subdomain') || DEFAULTS.subdomain; },
-  get token()     { return localStorage.getItem('am_token')     || DEFAULTS.token; },
-  set subdomain(v){ localStorage.setItem('am_subdomain', v.trim()); },
-  set token(v)    { localStorage.setItem('am_token', v.trim()); },
-  get baseUrl()   { return `https://${this.subdomain}.app.apparelmagic.com/api`; },
-  valid()         { return this.subdomain && this.token; },
+  get baseUrl() { return '/.netlify/functions/am-proxy'; },
+  valid()       { return true; },
 };
 
 // ── Audio ─────────────────────────────────────────────────────────────────────
@@ -575,7 +547,7 @@ function toast(msg, type = '', dur = 2000) {
 
 // ── API ───────────────────────────────────────────────────────────────────────
 async function apiFetch(path) {
-  const url = `${Config.baseUrl}/${path}${path.includes('?') ? '&' : '?'}token=${Config.token}`;
+  const url = `${Config.baseUrl}?path=${encodeURIComponent(path)}`;
   const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
   if (!res.ok) {
     const body = await res.text().catch(() => '');
@@ -613,7 +585,6 @@ const App = {
     this.showScreen('lookup-screen');
     document.getElementById('header-status').textContent = '';
     document.getElementById('order-input').focus();
-    this._populateConfigFields();
   },
 
   goOrder() {
@@ -621,27 +592,10 @@ const App = {
     this.renderOrder();
   },
 
-  _populateConfigFields() {
-    document.getElementById('cfg-subdomain').value = Config.subdomain;
-    document.getElementById('cfg-token').value = Config.token;
-  },
-
-  saveConfig() {
-    Config.subdomain = document.getElementById('cfg-subdomain').value;
-    Config.token     = document.getElementById('cfg-token').value;
-    toast('Config saved', 'success');
-  },
-
   // ── Load order ──
   async loadOrder() {
     const raw = document.getElementById('order-input').value.trim();
     if (!raw) { toast('Enter an order number', 'warn'); return; }
-
-    if (!Config.valid()) {
-      toast('Set API config first', 'error', 3000);
-      document.getElementById('config-details').open = true;
-      return;
-    }
 
     state.orderId = raw;
     this.showScreen('loading-screen');
