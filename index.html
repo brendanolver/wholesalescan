@@ -602,7 +602,9 @@ const App = {
     document.getElementById('loading-label').textContent = 'Loading order…';
 
     try {
-      const order = await apiFetch(`orders/${raw}`);
+      const orderRes = await apiFetch(`orders/${raw}`);
+      const order = orderRes.response?.[0] || orderRes;
+      if (!order || !order.order_id) throw new Error('Order not found.');
       state.orderData = order;
 
       const items = order.order_items || [];
@@ -618,9 +620,8 @@ const App = {
 
       state.lines = items.map((item, idx) => {
         const inv = invResults[idx];
-        const upc = (inv.status === 'fulfilled' && inv.value)
-          ? (inv.value.upc_display || inv.value.upc || '').trim()
-          : '';
+        const invData = inv.status === 'fulfilled' ? (inv.value?.response?.[0] || inv.value) : null;
+        const upc = invData ? (invData.upc_display || invData.upc || '').trim() : '';
         return {
           index: idx,
           sku_id: item.sku_id,
@@ -655,7 +656,8 @@ const App = {
     btn.disabled = true; btn.textContent = '⋯';
 
     try {
-      const order = await apiFetch(`orders/${state.orderId}`);
+      const orderRes = await apiFetch(`orders/${state.orderId}`);
+      const order = orderRes.response?.[0] || orderRes;
       state.orderData = order;
       const items = order.order_items || [];
 
@@ -671,9 +673,8 @@ const App = {
       items.forEach((item, idx) => {
         const existing = state.lines[idx];
         const inv = invResults[idx];
-        const upc = (inv.status === 'fulfilled' && inv.value)
-          ? (inv.value.upc_display || inv.value.upc || '').trim()
-          : (existing?.upc || '');
+        const invData = inv.status === 'fulfilled' ? (inv.value?.response?.[0] || inv.value) : null;
+        const upc = invData ? (invData.upc_display || invData.upc || '').trim() : (existing?.upc || '');
         if (existing) {
           existing.qty = Number(item.qty) || 0;
           existing.qty_shipped = Number(item.qty_shipped) || 0;
