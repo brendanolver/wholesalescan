@@ -67,12 +67,13 @@
 
   /* ── Lookup screen ── */
   #lookup-screen {
-    display: flex; flex-direction: column;
+    flex-direction: column;
     align-items: center; justify-content: center;
     min-height: calc(100vh - 80px);
     gap: 24px;
     padding: 40px 20px;
   }
+  #lookup-screen.active { display: flex; }
   #lookup-screen h1 { font-size: 28px; font-weight: 700; text-align: center; }
   #lookup-screen p { color: var(--text-dim); text-align: center; font-size: 15px; }
 
@@ -341,21 +342,23 @@
 
   /* ── Error screen ── */
   #error-screen {
-    display: flex; flex-direction: column;
+    flex-direction: column;
     align-items: center; justify-content: center;
     min-height: calc(100vh - 80px);
     gap: 16px; padding: 40px 20px; text-align: center;
   }
+  #error-screen.active { display: flex; }
   #error-icon { font-size: 48px; }
   #error-msg { color: var(--text-dim); font-size: 15px; max-width: 340px; line-height: 1.5; }
 
   /* ── Complete screen ── */
   #complete-screen {
-    display: flex; flex-direction: column;
+    flex-direction: column;
     align-items: center; justify-content: center;
     min-height: calc(100vh - 80px);
     gap: 24px; padding: 40px 20px; text-align: center;
   }
+  #complete-screen.active { display: flex; }
   #complete-icon { font-size: 64px; }
   #complete-screen h2 { font-size: 28px; font-weight: 800; }
   #complete-screen p { color: var(--text-dim); font-size: 15px; max-width: 320px; line-height: 1.5; }
