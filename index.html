@@ -75,7 +75,7 @@
   #lookup-screen p { color: var(--text-dim); text-align: center; font-size: 15px; }
 
   .input-row {
-    display: flex; gap: 12px; width: 100%; max-width: 480px;
+    display: flex; gap: 12px; width: 100%; max-width: 340px;
   }
 
   input[type="text"], input[type="number"] {
@@ -321,11 +321,12 @@
 
   /* ── Loading ── */
   #loading-screen {
-    display: flex; flex-direction: column;
+    flex-direction: column;
     align-items: center; justify-content: center;
     min-height: calc(100vh - 80px);
     gap: 20px;
   }
+  #loading-screen.active { display: flex; }
   .spinner {
     width: 40px; height: 40px;
     border: 3px solid var(--border);
