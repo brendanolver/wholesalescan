@@ -10,7 +10,7 @@ exports.handler = async (event) => {
   }
 
   // Whitelist only the endpoints the app uses
-  if (!/^(orders\/[\w-]+|inventory\/[\w-]+)$/.test(path)) {
+  if (!/^(orders\/[\w-]+|inventory\/[\w-]+|products\/[\w-]+)$/.test(path)) {
     return { statusCode: 403, body: JSON.stringify({ error: 'Forbidden path' }) };
   }
 
