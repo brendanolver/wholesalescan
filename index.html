@@ -629,6 +629,9 @@ const App = {
       const orderRes = await apiFetch(`orders/${raw}`);
       const order = orderRes.response?.[0] || orderRes;
       if (!order || !order.order_id) throw new Error('Order not found.');
+      if (String(order.is_open) !== '1') {
+        throw new Error(`Order #${raw} is not open (status: ${order.fulfillment_status || 'closed'}). Only open orders can be verified.`);
+      }
       state.orderData = order;
 
       const items = order.order_items || [];
