@@ -1,5 +1,5 @@
 const AM_SUBDOMAIN = 'kohindustries';
-const AM_TOKEN     = '1e10c8f6d6bfbbddc025e880f8b08197';
+const AM_TOKEN     = 'cff4a1e4a3d0b3726a4117e4f14a618a';
 const AM_BASE      = `https://${AM_SUBDOMAIN}.app.apparelmagic.com/api`;
 
 exports.handler = async (event) => {
@@ -14,7 +14,8 @@ exports.handler = async (event) => {
     return { statusCode: 403, body: JSON.stringify({ error: 'Forbidden path' }) };
   }
 
-  const url = `${AM_BASE}/${path}?token=${AM_TOKEN}`;
+  const time = Math.floor(Date.now() / 1000);
+  const url = `${AM_BASE}/${path}/?token=${AM_TOKEN}&time=${time}`;
 
   try {
     const res = await fetch(url, { headers: { Accept: 'application/json' } });
