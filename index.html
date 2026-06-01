@@ -78,8 +78,10 @@
   #lookup-screen p { color: var(--text-dim); text-align: center; font-size: 15px; }
 
   .input-row {
-    display: flex; gap: 12px; width: 100%; max-width: 340px;
+    display: flex; gap: 8px; width: 100%; max-width: 320px; padding: 0 16px;
   }
+  .input-row input { min-width: 0; }
+  .input-row .btn { flex-shrink: 0; }
 
   input[type="text"], input[type="number"] {
     flex: 1;
